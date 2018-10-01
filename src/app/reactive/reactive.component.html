@@ -1,63 +1,62 @@
-<div class="container">
+<div class="container" >
   <div class="row">
     <div class="col-md-10">
       <h3>Фильтр</h3>
-      <!-- Форма ввода -->
       <div class="input-group mb-3">
-        <input type="text" class="form-control" 
-        #input
+        <input type="text" class="form-control" #input
         placeholder="Поиск" 
         aria-label="Recipient's username" 
         aria-describedby="basic-addon2"
-        (input)="searchWord$.next($event.target.value)">
+        (keyup)="searchInput.next($event.target.value)">
         <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button">Мне повезёт</button>
+          <button class="btn btn-outline-secondary" 
+          type="button" (click)="randomButton.next(true)" >Мне повезёт</button>
         </div>
       </div>
-      <!-- Форма ввода -->
     </div>
   </div>
-  <!-- Таблица -->
-  <!-- Подписка к answer$ -->
-  <div class="row" *ngIf="answers$ | async as answers">
-  <!-- Подписка к answer$ -->
+  <div class="row" >
+    
     <div class="col-md-10">
-      <h4>Сортированно по колонне: {{currentColumnNameRu}} </h4>
-      <!-- Вывод ошибки -->
-      <div class="alert alert-danger" role="alert" *ngIf="isString(answers)">
-        {{answers}}
+      <div class="alert alert-danger" role="alert" *ngIf="error$ | async as error">
+        {{error}}
       </div>
-      <!-- Вывод ошибки -->
-      <table class="table">
+      <table class="table" *ngIf="tableData$ | async as tableData">
         <thead>
           <tr>
-            <!-- Вывод заголовков из массива -->
             <th scope="col" class="pointer" *ngFor="let columnName of columnNames" 
-            (click)="columnClick(columnName.id)">
+            (click)="columnNamesClick.next(columnName.id)">
               {{columnName.nameRu}}
             </th>
-            <!-- Вывод заголовков из массива -->
           </tr>
         </thead>
-        <tbody *ngIf="isArray(answers)">
-          <tr *ngFor="let answer of answers">
+        <tbody >
+          <tr *ngFor="let answer of tableData">
             <td>{{answer.id}}</td>
             <td>{{answer.title}}</td>
             <td>{{answer.description}}</td>
           </tr>
-          <!-- Вывод пустого содержимого -->
-          <tr *ngIf="isArray(answers) && answers.length === 0">
+          <tr *ngIf="tableData.length === 0">
             <td>Пусто</td>
           </tr>
-          <!-- Вывод пустого содержимого -->
         </tbody>
       </table>
-      <!-- Спиннер -->
-      <div class="spinner-box" [hidden]="!_dataService.isLoading()">
+      <div class="spinner-box" *ngIf="spinner$ | async">
         <img src="assets/loader.gif" alt="" class="spinner">
       </div>
-      <!-- Спиннер -->
     </div>
   </div>
-  <!-- Таблица -->
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
